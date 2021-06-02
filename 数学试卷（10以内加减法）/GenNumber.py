@@ -3,6 +3,8 @@ from docx.shared import Inches
 from docx.shared import Cm
 import random
 from datetime import datetime
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.table import WD_ALIGN_VERTICAL
 
 document = Document()
 document.add_heading('数学试卷(10以内加减法)', 0)
@@ -32,9 +34,9 @@ def formula():
     # 定义运算符类型 1 = + ， 2 = - ，3 = *
 
     if(symbolType == 1):
-        return str(num1) + " + " + str(num2) + " = "
+        return str(num1) + "  +  " + str(num2) + "  = _____"
     else:
-        return str(num1) + " - " + str(num2) + " = "
+        return str(num1) + "  -  " + str(num2) + "  = _____"
 
 
 i = 1
@@ -58,6 +60,7 @@ print("测试的内容总数：" + str(len(formulaSet)))
 print(formulaSet)
 print("***********开始有序写入算式到word文档中的表格进行填充***********")
 table = document.add_table(rows=13, cols=4, style='Table Grid')
+table.style.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY_HI
 # table.autofit = True
 row = 0
 col = 0
@@ -68,8 +71,9 @@ for symbol in iter(formulaSet):
         col = 0
     table.cell(row, col).text = symbol
     table.cell(row, col).height = Cm(3000)
+    table.cell(row, col).vertical_alignment = WD_ALIGN_VERTICAL.CENTER
     col = col + 1
 for row in table.rows:
-    row.height = Cm(0.1)
+    row.height = Cm(1.2)
 dt = datetime.now()
 document.save("数学试卷" + dt.strftime('%Y%m%d%H%M%S') + ".docx")
